@@ -57,8 +57,21 @@ Các bài hiện có đều là **bài mẫu** — xóa đi khi bạn bắt đ�
 
 Toàn bộ quy tắc màu, chữ, khoảng cách nằm trong [`design-system/MASTER.md`](design-system/MASTER.md). Token CSS ở `src/styles/global.css`.
 
-## Đưa lên mạng (miễn phí)
+## Web đang chạy
 
-1. Đẩy thư mục này lên GitHub.
-2. Vào [Vercel](https://vercel.com) hoặc [Netlify](https://netlify.com) → *Import project* → chọn repo. Không cần cấu hình gì thêm.
-3. Khi có tên miền, sửa `site:` trong `astro.config.mjs`.
+- Địa chỉ: **https://uriduong.vercel.app**
+- Code: https://github.com/dgbao2043-creator/uri-blog (nhánh `main`)
+- Vercel tự build lại mỗi khi có code mới trên nhánh `main` (~1 phút).
+
+### Đăng bài mới
+
+```bash
+npm run dev                       # viết & xem trước ở localhost:4321
+git add -A
+git commit -m "Bài mới: <tên bài>"
+git push                          # Vercel tự đăng lên web
+```
+
+Repo này đã được gắn riêng với tài khoản GitHub `dgbao2043-creator` (trong địa chỉ remote), nên `git push` sẽ không lẫn với tài khoản GitHub khác trên máy.
+
+Khi có tên miền riêng: thêm tên miền trong Vercel → *Settings → Domains*, rồi sửa `site:` trong `astro.config.mjs`.
