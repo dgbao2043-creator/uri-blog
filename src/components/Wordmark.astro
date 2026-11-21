@@ -1,0 +1,67 @@
+---
+import Scribble from './Scribble.astro';
+import { SITE } from '../site.config';
+
+interface Props {
+  href: string;
+  size?: 'md' | 'lg';
+}
+
+const { href, size = 'md' } = Astro.props;
+---
+
+<a class:list={['wordmark', `wordmark--${size}`]} href={href} aria-label={`${SITE.author} — trang chủ`}>
+  <span class="wordmark__first hand">
+    {SITE.firstName}
+    <Scribble kind="underline" class="wordmark__line" />
+  </span>
+  <span class="wordmark__last">{SITE.lastName}</span>
+</a>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1;
+    min-height: 44px;
+    padding-block: 8px;
+  }
+
+  .wordmark__first {
+    position: relative;
+    font-size: 1.85em;
+    transform: rotate(-4deg);
+    transform-origin: left bottom;
+  }
+
+  .wordmark__line {
+    position: absolute;
+    left: -4%;
+    bottom: -0.32em;
+    width: 108%;
+    height: 0.4em;
+    transition: transform var(--t-base) var(--ease-out);
+    transform-origin: left center;
+  }
+
+  .wordmark:hover .wordmark__line {
+    transform: scaleX(1.12);
+  }
+
+  .wordmark__last {
+    font-weight: 600;
+    font-size: 1em;
+    letter-spacing: 0.01em;
+  }
+
+  .wordmark--md {
+    font-size: 1.0625rem;
+  }
+
+  .wordmark--lg {
+    font-size: 1.5rem;
+  }
+</style>

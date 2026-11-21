@@ -1,0 +1,419 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Header from './Header.astro';
+import Scribble from './Scribble.astro';
+import { SITE } from '../site.config';
+import { formatDate, postUrl, readingTime, useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  altUrl: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { lang, altUrl, posts } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="hero container" aria-roledescription="carousel" aria-label={t('hero.label')}>
+  <div class="hero__frame" data-carousel>
+    <Header lang={lang} altUrl={altUrl} variant="overlay" />
+
+    {
+      posts.map((post, i) => (
+        <article
+          class:list={['hero__slide', { 'is-active': i === 0 }]}
+          aria-roledescription="slide"
+          aria-label={`${i + 1} / ${posts.length}`}
+          aria-hidden={i === 0 ? undefined : 'true'}
+          inert={i === 0 ? undefined : true}
+          data-slide
+        >
+          <img
+            class="hero__img"
+            src={post.data.cover}
+            alt={post.data.coverAlt}
+            style={`object-position: ${post.data.coverPosition}`}
+            width="1600"
+            height="1000"
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : undefined}
+          />
+          <div class="hero__shade" />
+
+          <div class="hero__content">
+            <div class="hero__text">
+              <p class="hero__badge-row">
+                <span class="badge">{t(`cat.${post.data.category}`)}</span>
+                {i === 0 && (
+                  <span class="hero__note hand" aria-hidden="true">
+                    <Scribble kind="arrow" class="hero__arrow" />
+                    {t('hero.note')}
+                  </span>
+                )}
+              </p>
+              <h2 class="hero__title">
+                <a href={postUrl(post)}>{post.data.title}</a>
+              </h2>
+              <p class="hero__desc">{post.data.description}</p>
+            </div>
+
+            <div class="hero__byline">
+              <p class="hero__author">
+                <img src={SITE.avatarSmall} alt="" width="36" height="36" />
+                {SITE.author}
+              </p>
+              <p class="hero__meta">
+                <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+                <span class="dot" aria-hidden="true" />
+                {readingTime(post.body)} {t('post.min')}
+              </p>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+
+    {
+      posts.length > 1 && (
+        <div class="hero__controls">
+          <button class="hero__arrowbtn" type="button" data-prev aria-label={t('hero.prev')}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <div class="hero__dots">
+            {posts.map((post, i) => (
+              <button
+                type="button"
+                class="hero__dot"
+                data-dot={i}
+                aria-label={`${t('hero.goto')} ${i + 1}: ${post.data.title}`}
+                aria-current={i === 0 ? 'true' : undefined}
+              />
+            ))}
+          </div>
+          <button class="hero__arrowbtn" type="button" data-next aria-label={t('hero.next')}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: var(--s-4);
+  }
+
+  .hero__frame {
+    position: relative;
+    min-height: clamp(520px, 78vh, 680px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--on-photo);
+    isolation: isolate;
+  }
+
+  .hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 600ms var(--ease-out),
+      visibility 600ms;
+  }
+
+  .hero__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.04);
+    transition: transform 1200ms var(--ease-out);
+  }
+
+  .hero__slide.is-active .hero__img {
+    transform: scale(1);
+  }
+
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    /* Đủ tối để chữ trắng đọc được cả trên ảnh trời sáng */
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 42%, rgba(0, 0, 0, 0.08) 75%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.35) 0%, transparent 60%);
+  }
+
+  .hero__content {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding: 0 clamp(20px, 3vw, 32px) clamp(72px, 9vw, 88px);
+  }
+
+  .hero__text {
+    max-width: 620px;
+  }
+
+  .hero__badge-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+
+  .hero__note {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    white-space: nowrap;
+    font-size: 1.35rem;
+    color: var(--sun);
+    transform: rotate(-6deg) translateY(-14px);
+  }
+
+  .hero__arrow {
+    width: 34px;
+    height: 28px;
+    transform: scaleX(-1) rotate(-12deg);
+  }
+
+  .hero__title {
+    margin-top: var(--s-3);
+    font-size: var(--fs-2xl);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .hero__title a {
+    text-decoration: none;
+    background-image: linear-gradient(var(--sun), var(--sun));
+    background-size: 0% 4px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size var(--t-base) var(--ease-out);
+  }
+
+  .hero__title a:hover,
+  .hero__title a:focus-visible {
+    background-size: 100% 4px;
+  }
+
+  /* Cả khung ảnh bấm được */
+  .hero__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .hero__desc {
+    margin-top: var(--s-3);
+    max-width: 46ch;
+    font-size: var(--fs-base);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .hero__byline {
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .hero__author {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-weight: 600;
+  }
+
+  .hero__author img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--on-photo);
+    object-fit: cover;
+  }
+
+  .hero__meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: var(--s-2);
+    font-size: var(--fs-sm);
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .hero__meta .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .hero__controls {
+    position: absolute;
+    left: clamp(20px, 3vw, 32px);
+    bottom: clamp(20px, 3vw, 28px);
+    z-index: 5;
+    display: none;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  :global(.js) .hero__controls {
+    display: flex;
+  }
+
+  .hero__dots {
+    display: flex;
+    align-items: center;
+  }
+
+  .hero__dot {
+    width: 24px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .hero__dot::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.5px solid var(--on-photo);
+    transform: translate(-50%, -50%);
+    transition:
+      width var(--t-base) var(--ease-out),
+      background-color var(--t-base) var(--ease-out);
+  }
+
+  .hero__dot[aria-current='true']::before {
+    background: var(--sun);
+    border-color: var(--sun);
+  }
+
+  .hero__arrowbtn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--on-photo);
+    cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease-out);
+  }
+
+  .hero__arrowbtn:hover {
+    background: var(--sun);
+    border-color: var(--sun);
+    color: var(--ink);
+  }
+
+  .hero :focus-visible {
+    outline-color: var(--sun);
+    box-shadow: none;
+  }
+
+  @media (max-width: 760px) {
+    .hero__frame {
+      min-height: 600px;
+    }
+
+    .hero__content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--s-4);
+    }
+
+    .hero__byline {
+      text-align: left;
+    }
+
+    .hero__meta {
+      justify-content: flex-start;
+    }
+
+    .hero__desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+</style>
+
+<script>
+  function initCarousel(root: HTMLElement) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    if (slides.length < 2) return;
+    let index = 0;
+
+    const go = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle('is-active', active);
+        slide.toggleAttribute('inert', !active);
+        if (active) slide.removeAttribute('aria-hidden');
+        else slide.setAttribute('aria-hidden', 'true');
+      });
+      dots.forEach((dot, i) => {
+        if (i === index) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => go(index - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => go(index + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => go(i)));
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(index - 1);
+      if (e.key === 'ArrowRight') go(index + 1);
+    });
+
+    // Vuốt ngang trên điện thoại (vẫn có nút bấm thay thế)
+    let startX = 0;
+    let startY = 0;
+    root.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? index + 1 : index - 1);
+    }, { passive: true });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(initCarousel);
+</script>

@@ -1,0 +1,102 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Scribble from '../Scribble.astro';
+import { SITE } from '../../site.config';
+import { localePath, otherLang } from '../../i18n/utils';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const page = await getEntry('pages', `${lang}/about`);
+if (!page) throw new Error(`Missing src/content/pages/${lang}/about.md`);
+const { Content } = await render(page);
+---
+
+<Base lang={lang} title={page.data.title} altUrl={localePath(otherLang(lang), '/about/')} current="about">
+  <div class="about container">
+    <figure class="about__photo">
+      <img src={SITE.avatar} alt={SITE.author} width="480" height="600" />
+      {
+        page.data.note && (
+          <figcaption class="about__note hand">
+            <Scribble kind="arrow" class="about__arrow" color="var(--ink)" width={2} />
+            {page.data.note}
+          </figcaption>
+        )
+      }
+    </figure>
+
+    <div class="about__text">
+      <h1 class="about__title">
+        <span class="highlight">{page.data.title}</span>
+      </h1>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-8);
+    align-items: start;
+    padding-top: var(--s-8);
+  }
+
+  .about__photo {
+    position: sticky;
+    top: var(--s-6);
+    margin: 0;
+  }
+
+  .about__photo img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+
+  .about__note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+    font-size: 1.4rem;
+    line-height: 1.2;
+    transform: rotate(-2deg);
+  }
+
+  .about__arrow {
+    width: 36px;
+    height: 30px;
+    flex-shrink: 0;
+    transform: scaleY(-1) rotate(20deg);
+  }
+
+  .about__title {
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.025em;
+    margin-bottom: var(--s-6);
+  }
+
+  @media (max-width: 820px) {
+    .about {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+      padding-top: var(--s-6);
+    }
+
+    .about__photo {
+      position: static;
+      max-width: 340px;
+    }
+  }
+</style>

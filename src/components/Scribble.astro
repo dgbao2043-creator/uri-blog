@@ -1,0 +1,58 @@
+---
+/**
+ * Nét vẽ tay — dấu ấn riêng của blog. Luôn mang tính trang trí (aria-hidden).
+ * kind: underline | arrow | circle | sparkle | squiggle
+ */
+interface Props {
+  kind: 'underline' | 'arrow' | 'circle' | 'sparkle' | 'squiggle';
+  class?: string;
+  color?: string;
+  width?: number;
+}
+
+// `rest` mang theo thuộc tính scope CSS (data-astro-cid-*) của component cha
+const { kind, class: className, color = 'var(--sun)', width = 3, ...rest } = Astro.props;
+
+const shapes = {
+  underline: {
+    viewBox: '0 0 200 22',
+    paths: ['M3 13C40 6 82 4 122 9s60 6 75-3', 'M22 17c50-5 104-6 158-3'],
+  },
+  arrow: {
+    viewBox: '0 0 80 64',
+    paths: ['M74 6C52 5 27 16 16 48', 'M6 37l10 13 13-8'],
+  },
+  circle: {
+    viewBox: '0 0 200 84',
+    paths: [
+      'M104 8C46 4 7 21 8 43c1 23 52 35 104 33 49-2 84-17 81-39C190 15 150 5 88 13',
+    ],
+  },
+  sparkle: {
+    viewBox: '0 0 40 40',
+    paths: ['M20 3c1 12 5 16 17 17-12 1-16 5-17 17-1-12-5-16-17-17 12-1 16-5 17-17Z'],
+  },
+  squiggle: {
+    viewBox: '0 0 120 14',
+    paths: ['M2 8c10-6 18 4 28-1s18-5 28 0 18 5 28 0 18-4 32 1'],
+  },
+} as const;
+
+const shape = shapes[kind];
+---
+
+<svg
+  class:list={['scribble', `scribble--${kind}`, className]}
+  viewBox={shape.viewBox}
+  fill="none"
+  stroke={color}
+  stroke-width={width}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  preserveAspectRatio="none"
+  {...rest}
+>
+  {shape.paths.map((d) => <path d={d} vector-effect="non-scaling-stroke" />)}
+</svg>

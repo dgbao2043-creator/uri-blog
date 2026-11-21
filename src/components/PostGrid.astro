@@ -1,0 +1,278 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from './PostCard.astro';
+import Scribble from './Scribble.astro';
+import { useTranslations } from '../i18n/utils';
+import { categories, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { lang, posts } = Astro.props;
+const t = useTranslations(lang);
+const filters = ['all', ...categories] as const;
+---
+
+<section id="blog" class="blog container" aria-labelledby="blog-heading" data-blog>
+  <div class="blog__head">
+    <div>
+      <h2 id="blog-heading" class="blog__title">
+        <span class="blog__title-word">
+          {t('blog.heading')}
+          <Scribble kind="circle" class="blog__circle" width={2.5} />
+        </span>
+      </h2>
+      <p class="blog__intro">{t('blog.intro')}</p>
+    </div>
+    <p class="blog__note hand" aria-hidden="true">
+      <Scribble kind="sparkle" class="blog__sparkle" color="var(--ink)" width={1.75} />
+      {t('blog.note')}
+    </p>
+  </div>
+
+  <div class="blog__toolbar">
+    <div class="blog__filters" role="group" aria-label={t('blog.filter')}>
+      {
+        filters.map((key) => (
+          <button
+            type="button"
+            class="chip"
+            data-filter={key}
+            aria-pressed={key === 'all' ? 'true' : 'false'}
+          >
+            {key === 'all' ? t('cat.all') : t(`cat.${key}`)}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="blog__sort">
+      <label for="sort">{t('blog.sort')}</label>
+      <div class="select">
+        <select id="sort" data-sort>
+          <option value="new">{t('blog.newest')}</option>
+          <option value="old">{t('blog.oldest')}</option>
+        </select>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <ul class="blog__grid" data-grid>
+    {
+      posts.map((post) => (
+        <li data-item data-category={post.data.category} data-date={post.data.date.valueOf()}>
+          <PostCard post={post} lang={lang} />
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="blog__empty" data-empty hidden>
+    <Scribble kind="squiggle" class="blog__empty-line" />
+    {t('blog.empty')}
+  </p>
+  <p class="visually-hidden" aria-live="polite" data-status></p>
+</section>
+
+<style>
+  .blog {
+    padding-top: var(--s-8);
+  }
+
+  .blog__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-4) var(--s-6);
+  }
+
+  .blog__title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+  }
+
+  .blog__title-word {
+    position: relative;
+    display: inline-block;
+    padding-inline: 0.1em;
+  }
+
+  .blog__circle {
+    position: absolute;
+    left: -22%;
+    top: -18%;
+    width: 144%;
+    height: 136%;
+    pointer-events: none;
+  }
+
+  .blog__intro {
+    margin-top: var(--s-3);
+    max-width: 52ch;
+    color: var(--ink-muted);
+  }
+
+  .blog__note {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: 1.45rem;
+    line-height: 1.2;
+    transform: rotate(-3deg);
+    color: var(--ink);
+  }
+
+  .blog__sparkle {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .blog__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+    padding-bottom: var(--s-5);
+  }
+
+  .blog__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .blog__sort {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: var(--fs-sm);
+    color: var(--ink-muted);
+  }
+
+  .select {
+    position: relative;
+  }
+
+  .select select {
+    appearance: none;
+    min-height: 40px;
+    padding: 0 40px 0 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .select select:hover {
+    border-color: var(--ink);
+  }
+
+  .select svg {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--ink);
+  }
+
+  .blog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr));
+    gap: var(--s-7) var(--s-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .blog__grid > li[hidden] {
+    display: none;
+  }
+
+  .blog__empty {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-3);
+    padding: var(--s-8) var(--s-4);
+    text-align: center;
+    color: var(--ink-muted);
+  }
+
+  .blog__empty[hidden] {
+    display: none;
+  }
+
+  .blog__empty-line {
+    width: 120px;
+    height: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .blog__note {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-blog]').forEach((root) => {
+    const grid = root.querySelector<HTMLElement>('[data-grid]')!;
+    const items = [...root.querySelectorAll<HTMLElement>('[data-item]')];
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const sort = root.querySelector<HTMLSelectElement>('[data-sort]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+
+    const params = new URLSearchParams(location.search);
+    let filter = params.get('topic') ?? 'all';
+    if (!chips.some((c) => c.dataset.filter === filter)) filter = 'all';
+    if (params.get('sort') === 'old') sort.value = 'old';
+
+    const apply = (updateUrl = true) => {
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === filter)));
+
+      const sorted = [...items].sort((a, b) => {
+        const diff = Number(b.dataset.date) - Number(a.dataset.date);
+        return sort.value === 'old' ? -diff : diff;
+      });
+      sorted.forEach((el) => grid.appendChild(el));
+
+      let visible = 0;
+      items.forEach((el) => {
+        const show = filter === 'all' || el.dataset.category === filter;
+        el.hidden = !show;
+        if (show) visible++;
+      });
+      empty.hidden = visible > 0;
+      status.textContent = `${visible}`;
+
+      if (updateUrl) {
+        const url = new URL(location.href);
+        filter === 'all' ? url.searchParams.delete('topic') : url.searchParams.set('topic', filter);
+        sort.value === 'old' ? url.searchParams.set('sort', 'old') : url.searchParams.delete('sort');
+        history.replaceState(null, '', url);
+      }
+    };
+
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        filter = chip.dataset.filter ?? 'all';
+        apply();
+      }),
+    );
+    sort.addEventListener('change', () => apply());
+    apply(false);
+  });
+</script>

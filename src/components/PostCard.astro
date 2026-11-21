@@ -1,0 +1,119 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, postUrl, readingTime, useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, lang, headingLevel = 'h3' } = Astro.props;
+const t = useTranslations(lang);
+const Heading = headingLevel;
+---
+
+<article class="card" data-category={post.data.category} data-date={post.data.date.valueOf()}>
+  <div class="card__media">
+    <img
+      src={post.data.cover}
+      alt={post.data.coverAlt}
+      style={`object-position: ${post.data.coverPosition}`}
+      width="800"
+      height="560"
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="badge card__badge">{t(`cat.${post.data.category}`)}</span>
+  </div>
+  <p class="meta card__meta">
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+    <span class="dot" aria-hidden="true"></span>
+    <span>{readingTime(post.body)} {t('post.min')}</span>
+  </p>
+  <Heading class="card__title">
+    <a href={postUrl(post)}><span>{post.data.title}</span></a>
+  </Heading>
+  <p class="card__desc">{post.data.description}</p>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card__media {
+    position: relative;
+    aspect-ratio: 10 / 7;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-out);
+  }
+
+  .card:hover .card__media img {
+    transform: scale(1.04);
+  }
+
+  .card__badge {
+    position: absolute;
+    top: var(--s-3);
+    left: var(--s-3);
+  }
+
+  .card__meta {
+    margin-top: var(--s-4);
+  }
+
+  .card__title {
+    margin-top: var(--s-2);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .card__title a {
+    text-decoration: none;
+  }
+
+  /* Vệt dạ quang chạy dưới tiêu đề khi hover */
+  .card__title span {
+    background-image: linear-gradient(var(--sun), var(--sun));
+    background-size: 0% 0.4em;
+    background-position: 0 88%;
+    background-repeat: no-repeat;
+    transition: background-size var(--t-base) var(--ease-out);
+  }
+
+  .card:hover .card__title span,
+  .card__title a:focus-visible span {
+    background-size: 100% 0.4em;
+  }
+
+  /* Cả thẻ bấm được */
+  .card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .card__desc {
+    margin-top: var(--s-2);
+    color: var(--ink-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
