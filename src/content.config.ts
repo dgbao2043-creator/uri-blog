@@ -13,7 +13,8 @@ const blog = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     category: z.enum(['learn', 'live', 'go']),
-    cover: z.string(),
+    // Chấp nhận cả "public/images/x.jpg", "images/x.jpg" lẫn "/images/x.jpg"
+    cover: z.string().transform((p) => '/' + p.trim().replace(/^\/?(public\/)?/, '')),
     coverAlt: z.string(),
     /** Vùng ảnh được giữ khi cắt khung, ví dụ '50% 30%' (ngang dọc). Hữu ích cho ảnh dọc. */
     coverPosition: z.string().default('50% 50%'),
