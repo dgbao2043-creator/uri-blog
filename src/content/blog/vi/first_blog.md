@@ -8,8 +8,8 @@ coverAlt: 'Sách "Cách kể chuyện của Pixar do một người chị của 
 translationKey: bai-dau-tien
 ---
 
-Nội dung bài viết...
-M là một người hay viết, m am hiểu cách hành văn sao cho logic, truyền cảm, hãy edit đoạn blog do t viết vừa rồi t xem. 
+
+
 
 Hôm nay mình thấy mình giống Mike Wazowski. 
 Có ai ở đây mê phim Disney không nhỉ? 
