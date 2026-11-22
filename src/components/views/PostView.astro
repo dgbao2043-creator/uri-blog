@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PostCard from '../PostCard.astro';
 import Scribble from '../Scribble.astro';
+import Mascot from '../Mascot.astro';
 import { SITE } from '../../site.config';
 import {
   formatDate,
@@ -101,8 +102,8 @@ const related = [
 
       <footer class="post__sign" aria-label="Signature">
         <p class="post__sign-name hand">
+          <Mascot class="post__sign-mascot" />
           {SITE.firstName}
-          <Scribble kind="underline" class="post__sign-line" />
         </p>
         <p class="post__sign-note hand">
           <Scribble kind="arrow" class="post__sign-arrow" color="var(--ink)" width={2} />
@@ -232,17 +233,18 @@ const related = [
 
   .post__sign-name {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15em;
     font-size: 3.5rem;
     line-height: 1;
     transform: rotate(-5deg);
   }
 
-  .post__sign-line {
-    position: absolute;
-    left: -6%;
-    bottom: -0.15em;
-    width: 112%;
-    height: 0.35em;
+  .post__sign-mascot {
+    width: 1em;
+    height: 1em;
+    transform: rotate(8deg);
   }
 
   .post__sign-note {

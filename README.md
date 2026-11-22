@@ -1,4 +1,4 @@
-# Uri Dương — Blog cá nhân
+# OK, Uri — Blog cá nhân của Uri Dương
 
 Blog song ngữ Việt – Anh, phong cách **youth minimalism**: nền trắng, chữ đen, vàng nắng làm điểm nhấn, nét vẽ tay làm chữ ký riêng.
 Dựng bằng [Astro](https://astro.build) — viết bài bằng file Markdown, web tĩnh, nhẹ, deploy miễn phí.

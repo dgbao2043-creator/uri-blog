@@ -19,7 +19,7 @@ interface Props {
 
 const { lang, title, description, altUrl, image, header = true, current } = Astro.props;
 const t = useTranslations(lang);
-const fullTitle = title ? `${title} — ${SITE.author}` : `${SITE.author} · ${t('site.tagline')}`;
+const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} · ${t("site.tagline")}`;
 const desc = description ?? t('site.description');
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site) : undefined;

@@ -1,4 +1,4 @@
-# Uri Dương — Design System (MASTER)
+# OK, Uri — Design System (MASTER)
 
 > Nguồn sự thật cho giao diện blog. Khi thêm trang mới, đọc file này trước.
 > Tham chiếu: The Hanoi Chamomile (giọng kể gần gũi, About me) + Horizone (hero ảnh lớn, bộ lọc chủ đề, lưới thẻ).
@@ -32,7 +32,9 @@ Mỗi màn hình chỉ 1–2 nét vẽ tay — đủ để thấy cá tính, kh�
 - Không đổ bóng nặng. Hover = ảnh phóng nhẹ 1.03 + gạch chân dạ quang dưới tiêu đề.
 
 ## Thành phần đặc trưng
-- **Wordmark**: "Uri" (Mansalva) + "Dương" (Be Vietnam Pro 600) + nét gạch vàng vẽ tay.
+- **Tên blog**: **OK, Uri** — concept *ổn cả, Uri.* (EN: *it's all okay, Uri.*). Tác giả: Uri Dương.
+- **Wordmark**: linh vật Nắng + "OK," (Mansalva, chữ mực trên sticker vàng nghiêng -6°, bóng đổ mực) + "Uri" (Mansalva, màu mực / trắng trên ảnh). Không dùng nét gạch trang trí.
+- **Linh vật "Nắng"** (`src/components/Mascot.astro`): mặt trời nhỏ (Dương = nắng), mắt to có đốm sáng, nháy một mắt = "ổn cả mà", má hồng, tóc vểnh, viền mực kiểu sticker. Hover logo: tia nắng xoay, nghiêng đầu, chớp mắt. Dùng ở logo, chữ ký cuối bài, favicon.
 - **Highlight**: `<mark>` trong Markdown → vệt bút dạ quang vàng nghiêng nhẹ.
 - **Ghi chú tay** (`HandNote`): chữ Mansalva + mũi tên SVG vẽ tay.
 - **Chip chủ đề**: Học / Sống / Đi (EN: Learn / Live / Go).

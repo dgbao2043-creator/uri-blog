@@ -3,6 +3,7 @@
  * Mạng xã hội để trống ('') thì icon sẽ tự ẩn.
  */
 export const SITE = {
+  name: 'OK, Uri', // tên blog
   author: 'Uri Dương',
   firstName: 'Uri',
   lastName: 'Dương',

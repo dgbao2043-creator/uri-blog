@@ -18,7 +18,7 @@ const heroPosts = featured.length ? featured : posts.slice(0, 3);
 ---
 
 <Base lang={lang} altUrl={localePath(otherLang(lang), '/')} header={false}>
-  <h1 class="visually-hidden">{SITE.author} — {t('site.tagline')}</h1>
+  <h1 class="visually-hidden">{SITE.name} — {t("site.concept")}</h1>
   <Hero lang={lang} altUrl={localePath(otherLang(lang), '/')} posts={heroPosts} />
   <PostGrid lang={lang} posts={posts} />
 </Base>

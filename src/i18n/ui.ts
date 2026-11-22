@@ -8,8 +8,9 @@ export type Category = (typeof categories)[number];
 export const ui = {
   vi: {
     'site.tagline': 'Học · Sống · Đi',
+    'site.concept': 'ổn cả, Uri.',
     'site.description':
-      'Blog của Uri Dương — ghi chép về việc học, những suy nghĩ đời thường và các chuyến đi nhỏ.',
+      'OK, Uri — blog của Uri Dương: ghi chép về việc học, những suy nghĩ đời thường và các chuyến đi nhỏ.',
     'nav.blog': 'Blog',
     'nav.about': 'Về Uri',
     'nav.now': 'Bây giờ',
@@ -46,8 +47,9 @@ export const ui = {
   },
   en: {
     'site.tagline': 'Learn · Live · Go',
+    'site.concept': "it's all okay, Uri.",
     'site.description':
-      "Uri Dương's blog — notes on learning, everyday thoughts and small journeys.",
+      "OK, Uri — Uri Dương's blog: notes on learning, everyday thoughts and small journeys.",
     'nav.blog': 'Blog',
     'nav.about': 'About',
     'nav.now': 'Now',

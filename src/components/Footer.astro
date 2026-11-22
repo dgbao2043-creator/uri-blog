@@ -31,9 +31,10 @@ const socials = Object.entries(SITE.socials).filter(([, url]) => url);
     <div class="site-footer__brand">
       <Wordmark href={localePath(lang, '/')} size="lg" />
       <p class="hand site-footer__tagline">
-        {t('site.tagline')}
+        {t('site.concept')}
         <Scribble kind="squiggle" class="site-footer__squiggle" />
       </p>
+      <p class="site-footer__topics">{t('site.tagline')}</p>
     </div>
 
     <nav aria-label="Footer" class="site-footer__nav">
@@ -96,6 +97,20 @@ const socials = Object.entries(SITE.socials).filter(([, url]) => url);
     display: inline-block;
     margin-top: var(--s-2);
     font-size: 1.25rem;
+    color: var(--ink-muted);
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-footer__topics {
+    margin-top: var(--s-1);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.08em;
     color: var(--ink-muted);
   }
 
